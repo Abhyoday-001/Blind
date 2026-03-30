@@ -1,11 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useIdeas } from '@/context/IdeaContext';
 import { Card } from '@/components/ui/card';
 
 export default function StatisticsPanel() {
-  const { statistics, darkMode } = useIdeas();
+  const { statistics, darkMode, user, seedDummyIdeas } = useIdeas();
+  const [seeding, setSeeding] = useState(false);
+
+  const handleSeed = async () => {
+    setSeeding(true);
+    try {
+      await seedDummyIdeas();
+    } catch (error) {
+      console.error('Failed to seed ideas:', error);
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   return (
     <Card
@@ -176,6 +188,25 @@ export default function StatisticsPanel() {
             {statistics.highestMarketPotentialCount}
           </p>
         </div>
+
+        {/* Seed Dummy Ideas Link */}
+        {user && (
+          <div className="pt-4 mt-2 border-t border-dashed" style={{ borderColor: 'var(--border)' }}>
+            <button
+              onClick={handleSeed}
+              disabled={seeding}
+              className="text-xs font-bold hover:underline tracking-tight"
+              style={{
+                fontFamily: 'var(--font-courier-prime)',
+                color: 'var(--mustard)',
+                cursor: seeding ? 'not-allowed' : 'pointer',
+                opacity: seeding ? 0.7 : 1,
+              }}
+            >
+              {seeding ? 'SEEDING IDEAS...' : '✚ SEED DUMMY IDEAS'}
+            </button>
+          </div>
+        )}
       </div>
     </Card>
   );

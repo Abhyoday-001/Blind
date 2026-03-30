@@ -14,6 +14,7 @@ export interface IdeaContextType {
   login: (credentials: any) => Promise<void>;
   register: (userData: any) => Promise<void>;
   logout: () => void;
+  seedDummyIdeas: () => Promise<void>;
   fetchIdeas: () => Promise<void>;
   addIdea: (idea: any) => Promise<string>;
   updateIdea: (id: string, idea: any) => Promise<void>;
@@ -213,6 +214,39 @@ export function IdeaProvider({ children }: { children: React.ReactNode }) {
     await fetchIdeas();
   }, []);
 
+  const seedDummyIdeas = useCallback(async () => {
+    const dummyIdeas = [
+      {
+        title: 'AI Personal Stylist',
+        category: 'Fashion',
+        description: 'An AI that suggests outfits from your wardrobe based on weather and events.',
+        difficulty: 3,
+        marketPotential: 'High',
+        problemStatement: 'People struggle to choose outfits every morning.'
+      },
+      {
+        title: 'Eco-Grocery Delivery',
+        category: 'Sustainability',
+        description: 'Zero-waste grocery delivery using reusable containers and electric bikes.',
+        difficulty: 4,
+        marketPotential: 'Massive',
+        problemStatement: 'Grocery delivery creates too much plastic waste.'
+      },
+      {
+        title: 'VR Team Bonding',
+        category: 'Future of Work',
+        description: 'Virtual reality reality escape rooms and team activities for remote companies.',
+        difficulty: 2,
+        marketPotential: 'Medium',
+        problemStatement: 'Remote teams feel disconnected and lonely.'
+      }
+    ];
+
+    for (const idea of dummyIdeas) {
+      await addIdea(idea);
+    }
+  }, [addIdea]);
+
   return (
     <IdeaContext.Provider
       value={{
@@ -225,6 +259,7 @@ export function IdeaProvider({ children }: { children: React.ReactNode }) {
         login,
         register,
         logout,
+        seedDummyIdeas,
         fetchIdeas,
         addIdea,
         updateIdea,
