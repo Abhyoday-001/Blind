@@ -1,0 +1,18 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+  functions = "backend/netlify/functions"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[build.environment]
+  NEXT_USE_NETLIFY_EDGE = "true"
+  NODE_VERSION = "20"
+  MONGO_URI = "mongodb+srv://abhyodaysingh001_db_user:4PYtnFcwm8EGRscZ@startup.jjhkkhf.mongodb.net/?appName=Startup"
+  JWT_SECRET = "v3ry_s3cr3t_762_b64_k3y_991"

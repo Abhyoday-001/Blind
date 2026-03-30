@@ -11,10 +11,6 @@ const initCronJobs = require('./src/utils/cronJobs');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-const startServer = async () => {
-  await connectDB();
-
 const app = express();
 
 // Body parser
@@ -49,22 +45,29 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5001;
+// Export app for serverless
+module.exports = app;
 
-// Init cron jobs
-initCronJobs();
+// Only start the server if not running as a function
+if (require.main === module) {
+  const startServer = async () => {
+    await connectDB();
+    const PORT = process.env.PORT || 5001;
+    
+    // Init cron jobs
+    initCronJobs();
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+    const server = app.listen(PORT, () => {
+      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    });
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`);
-  // Close server & exit process
-  server.close(() => process.exit(1));
-});
+    // Handle unhandled promise rejections
+    process.on('unhandledRejection', (err, promise) => {
+      console.log(`Error: ${err.message}`);
+      // Close server & exit process
+      server.close(() => process.exit(1));
+    });
+  };
 
-};
-
-startServer();
+  startServer();
+}

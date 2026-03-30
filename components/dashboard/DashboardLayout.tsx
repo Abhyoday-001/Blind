@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 import Link from 'next/link';
+import { Spinner } from '@/components/ui/spinner';
 
 function DashboardContent() {
   const { darkMode, user, logout, loading } = useIdeas();
@@ -29,7 +30,11 @@ function DashboardContent() {
   }, [darkMode]);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--background)' }}>
+        <Spinner variant="vintage" size="lg" />
+      </div>
+    );
   }
 
   return (
